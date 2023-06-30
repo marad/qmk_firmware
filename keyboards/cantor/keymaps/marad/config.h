@@ -1,0 +1,8 @@
+#pragma once
+
+//#define CAPS_WORD_IDLE_TIMEOUT 3000
+
+#define RETRO_TAPPING
+#define PERMISSIVE_HOLD
+
+#define ENABLE_COMPILE_KEYCODE
