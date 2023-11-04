@@ -16,18 +16,25 @@ enum my_keycodes {
     KC_ADPW = SAFE_RANGE
 };
 
+const uint16_t PROGMEM temp_numkey[] = {KC_D, KC_F, COMBO_END};
+const uint16_t PROGMEM temp_funkey[] = {KC_J, KC_K, COMBO_END};
+combo_t key_combos[] = {
+    COMBO(temp_numkey, MO(NUMPAD)),
+    COMBO(temp_funkey, MO(NUMPAD)),
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [BASE] = LAYOUT_split_3x6_3(
         KC_ESC       , KC_Q, KC_W, KC_E, KC_R, KC_T,      KC_Y, KC_U, KC_I,    KC_O,   KC_P,    KC_BSPC,
         OSM(MOD_LCTL), KC_A, KC_S, KC_D, KC_F, KC_G,      KC_H, KC_J, KC_K,    KC_L,   KC_SCLN, KC_QUOT,
         KC_LGUI      , KC_Z, KC_X, KC_C, KC_V, KC_B,      KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, QK_LEAD,
-             LT(NAV, KC_TAB), OSM(MOD_LSFT), KC_SPC,      KC_ENT, OSL(SYMBOLS), KC_LALT
-    ), 
+                   LT(NAV, KC_TAB), KC_LSFT, KC_SPC,      KC_ENT, MO(SYMBOLS), KC_LALT
+    ),
     [SYMBOLS] = LAYOUT_split_3x6_3(
         KC_GRV  , KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,       KC_CIRC, KC_AMPR, KC_ASTR, PB_1   , _______, TO(GAME),
-        KC_TILD , _______, _______, _______, KC_MINS, KC_PLUS,       KC_NUHS, KC_LCBR, KC_RCBR, KC_PIPE, _______, TO(NAV),
-        TO(BASE), _______, _______, _______, KC_UNDS,  KC_EQL,       KC_LBRC, KC_LPRN, KC_RPRN, KC_RBRC, _______, TO(QTM),
-                                    _______, CW_TOGG, KC_UNDS,       _______, TO(NUMPAD), _______
+        KC_TILD , _______, KC_LABK, KC_RABK, KC_MINS, KC_PLUS,       KC_NUHS, KC_LCBR, KC_RCBR, KC_PIPE, KC_COLN, KC_DQUO,
+        TO(BASE), _______, KC_LBRC, KC_RBRC, KC_UNDS,  KC_EQL,       KC_LBRC, KC_LPRN, KC_RPRN, KC_RBRC, _______, TO(QTM),
+                                    TO(NAV), CW_TOGG, KC_UNDS,       _______, _______, _______
     ),
     [NUMPAD] = LAYOUT_split_3x6_3(
         _______ ,  KC_F12,  KC_F11,  KC_F10,   KC_F9, KC_COMM,        KC_DOT,    KC_7,    KC_8,    KC_9,    KC_0, _______,
@@ -77,7 +84,7 @@ bool handle_custom_keycodes(uint16_t keycode, keyrecord_t *record) {
         case KC_ADPW:
             if (record->event.pressed) {
                 send_string(ADPW);
-            } 
+            }
             return false;
         default:
             return true;
@@ -91,7 +98,7 @@ bool shift_and_bsp_to_del(uint16_t keycode, keyrecord_t *record) {
     mods = get_mods();
 
     switch (keycode) {
-        case KC_BSPC: 
+        case KC_BSPC:
             // SFT + BSP -> DEL
             if (record->event.pressed) {
                 if (mods & MOD_MASK_SHIFT) {
@@ -100,7 +107,7 @@ bool shift_and_bsp_to_del(uint16_t keycode, keyrecord_t *record) {
                     delkey_registered = true;
                     set_mods(mods);
                     return false;
-                }             
+                }
             } else {
                 if (delkey_registered) {
                     unregister_code(KC_DEL);
@@ -137,8 +144,8 @@ bool alt_juggling(uint16_t keycode, keyrecord_t *record) {
                 alt_registered = false;
             }
             return false;
-        
-        // switch left alt for right alt to make polish letters: ąćęłńóśźż  
+
+        // switch left alt for right alt to make polish letters: ąćęłńóśźż
         case KC_A: case KC_C: case KC_E: case KC_L: case KC_N:
         case KC_O: case KC_S: case KC_X: case KC_Z:
             if (/*record->event.pressed &&*/ alt_held) {
@@ -161,7 +168,7 @@ bool alt_juggling(uint16_t keycode, keyrecord_t *record) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return
         alt_juggling(keycode, record)
-        && handle_custom_keycodes(keycode, record) 
+        && handle_custom_keycodes(keycode, record)
         && shift_and_bsp_to_del(keycode, record);
 }
 
