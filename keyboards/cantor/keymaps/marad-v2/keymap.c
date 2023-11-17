@@ -18,17 +18,21 @@ enum my_keycodes {
 
 const uint16_t PROGMEM temp_numkey[] = {KC_D, KC_F, COMBO_END};
 const uint16_t PROGMEM temp_funkey[] = {KC_J, KC_K, COMBO_END};
+const uint16_t PROGMEM temp_arrows[] = {KC_S, KC_D, COMBO_END};
+const uint16_t PROGMEM temp_mouse[]  = {KC_K, KC_L, COMBO_END};
 combo_t key_combos[] = {
     COMBO(temp_numkey, MO(NUMPAD)),
     COMBO(temp_funkey, MO(NUMPAD)),
+    COMBO(temp_arrows, MO(NAV)),
+    COMBO(temp_mouse,  MO(NAV)),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [BASE] = LAYOUT_split_3x6_3(
-        KC_ESC       , KC_Q, KC_W, KC_E, KC_R, KC_T,      KC_Y, KC_U, KC_I,    KC_O,   KC_P,    KC_BSPC,
-        OSM(MOD_LCTL), KC_A, KC_S, KC_D, KC_F, KC_G,      KC_H, KC_J, KC_K,    KC_L,   KC_SCLN, KC_QUOT,
-        KC_LGUI      , KC_Z, KC_X, KC_C, KC_V, KC_B,      KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, QK_LEAD,
-                   LT(NAV, KC_TAB), KC_LSFT, KC_SPC,      KC_ENT, MO(SYMBOLS), KC_LALT
+        KC_ESC                , KC_Q, KC_W, KC_E, KC_R, KC_T,      KC_Y, KC_U, KC_I,    KC_O,   KC_P,    KC_BSPC,
+        MT(MOD_LCTL, KC_TAB)  , KC_A, KC_S, KC_D, KC_F, KC_G,      KC_H, KC_J, KC_K,    KC_L,   KC_SCLN, MT(MOD_RCTL, KC_QUOT),
+        MEH_T(KC_LGUI)        , KC_Z, KC_X, KC_C, KC_V, KC_B,      KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, QK_LEAD,
+                                    KC_LALT, KC_LSFT, KC_SPC,      KC_ENT, MO(SYMBOLS), KC_RALT
     ),
     [SYMBOLS] = LAYOUT_split_3x6_3(
         KC_GRV  , KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,       KC_CIRC, KC_AMPR, KC_ASTR, PB_1   , _______, TO(GAME),
@@ -40,13 +44,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______ ,  KC_F12,  KC_F11,  KC_F10,   KC_F9, KC_COMM,        KC_DOT,    KC_7,    KC_8,    KC_9,    KC_0, _______,
         _______ ,   KC_F8,   KC_F7,   KC_F6,   KC_F5, _______,       KC_PPLS,    KC_4,    KC_5,    KC_6, KC_PAST, _______,
         TO(BASE),   KC_F4,   KC_F3,   KC_F2,   KC_F1, _______,       KC_PMNS,    KC_1,    KC_2,    KC_3, _______, KC_PEQL,
-                                    _______, _______, _______,       _______, TO(NAV),    _______
+                                    _______, _______, _______,       _______, _______,    _______
     ),
     [NAV] = LAYOUT_split_3x6_3(
         _______ , KC_ACL2, KC_WH_L, KC_MS_U, KC_WH_R, _______,       KC_VOLD, KC_VOLU, KC_MUTE, _______, _______, _______,
         _______ , KC_ACL1, KC_MS_L, KC_MS_D, KC_MS_R, KC_BTN1,       KC_LEFT, KC_DOWN,  KC_UP , KC_RGHT, _______, _______,
         TO(BASE), KC_ACL0, KC_WH_D, _______, KC_WH_U, KC_BTN2,       KC_MPRV, KC_MPLY, KC_MNXT, _______, _______, _______,
-                                    _______, _______, _______,       _______, TO(NUMPAD), _______
+                                    _______, _______, _______,       _______, _______, _______
     ),
     [QTM] = LAYOUT_split_3x6_3(
         TO(BASE), _______, _______, _______, _______, _______,       DB_TOGG, _______, _______, _______, _______, _______,
@@ -167,9 +171,9 @@ bool alt_juggling(uint16_t keycode, keyrecord_t *record) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return
-        alt_juggling(keycode, record)
-        && handle_custom_keycodes(keycode, record)
-        && shift_and_bsp_to_del(keycode, record);
+        //alt_juggling(keycode, record) &&
+        handle_custom_keycodes(keycode, record) &&
+        shift_and_bsp_to_del(keycode, record);
 }
 
 
