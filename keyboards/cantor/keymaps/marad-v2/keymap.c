@@ -13,7 +13,8 @@
 #define EMP 6
 
 enum my_keycodes {
-    KC_ADPW = SAFE_RANGE
+    KC_ADPW = SAFE_RANGE,
+    KC_SCRS, // take screenshot in windows
 };
 
 const uint16_t PROGMEM temp_numkey[] = {KC_D, KC_F, COMBO_END};
@@ -35,7 +36,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                     KC_LALT, KC_LSFT, KC_SPC,      KC_ENT, MO(SYMBOLS), KC_RALT
     ),
     [SYMBOLS] = LAYOUT_split_3x6_3(
-        KC_GRV  , KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,       KC_CIRC, KC_AMPR, KC_ASTR, PB_1   , _______, TO(GAME),
+        KC_GRV  , KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,       KC_CIRC, KC_AMPR, KC_ASTR, PB_1   , KC_SCRS, TO(GAME),
         KC_TILD , _______, KC_LABK, KC_RABK, KC_MINS, KC_PLUS,       KC_NUHS, KC_LCBR, KC_RCBR, KC_PIPE, KC_COLN, KC_DQUO,
         TO(BASE), _______, KC_LBRC, KC_RBRC, KC_UNDS,  KC_EQL,       KC_LBRC, KC_LPRN, KC_RPRN, KC_RBRC, _______, TO(QTM),
                                     TO(NAV), CW_TOGG, KC_UNDS,       _______, _______, _______
@@ -88,6 +89,17 @@ bool handle_custom_keycodes(uint16_t keycode, keyrecord_t *record) {
         case KC_ADPW:
             if (record->event.pressed) {
                 send_string(ADPW);
+            }
+            return false;
+        case KC_SCRS:
+            if (record->event.pressed) {
+                register_code(KC_LGUI);
+                register_code(KC_LSFT);
+                register_code(KC_S);
+            } else {
+                unregister_code(KC_S);
+                unregister_code(KC_LSFT);
+                unregister_code(KC_LGUI);
             }
             return false;
         default:
